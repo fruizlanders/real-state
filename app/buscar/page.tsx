@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { SearchBar } from "../components/SearchBar";
-import { PropertyCard } from "../inmueble/PropertyCard
+import { PropertyCard } from "../inmueble/PropertyCard";
 
 // Hacemos la página dinámica para que lea searchParams
 export const dynamic = "force-dynamic";
