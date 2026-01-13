@@ -1,112 +1,105 @@
-import Image from "next/image";
+import { supabase } from "@/lib/supabase";
+import { Navbar } from "./components/Navbar";
+import { Hero } from "./components/Hero";
+import { Categories } from "./components/Categories"; // Si creaste el de iconos
+import { PropertyCard } from "./inmueble/PropertyCard";
+import { Footer } from "./components/Footer";
+import Link from "next/link";
 
-export default function Home() {
+async function getInmuebles() {
+  const { data } = await supabase
+    .from("inmuebles")
+    .select("*")
+    .limit(6)
+    .order("created_at", { ascending: false });
+  return data || [];
+}
+
+export default async function Home() {
+  const inmuebles = await getInmuebles();
+
   return (
-    <main className="min-h-screen bg-slate-50">
-      {/* NAVBAR MINIMALISTA */}
-      <nav className="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="text-2xl font-bold tracking-tighter text-slate-900">
-          REAL<span className="text-indigo-600">STATE</span>
-        </div>
-        <div className="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
-          <a href="#" className="hover:text-indigo-600">
-            Comprar
-          </a>
-          <a href="#" className="hover:text-indigo-600">
-            Alquilar
-          </a>
-          <a href="#" className="hover:text-indigo-600">
-            Proyectos
-          </a>
-        </div>
-        <button className="bg-slate-900 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-slate-800 transition-all">
-          Publicar Inmueble
-        </button>
-      </nav>
+    <div className="min-h-screen bg-white">
+      <Navbar />
 
-      {/* HERO SECTION - El Gancho Visual */}
-      <section className="relative h-[70vh] flex items-center justify-center bg-slate-900 overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1600585154340-be6199f7d009?q=80&w=2070"
-          alt="Casa de lujo"
-          fill
-          className="object-cover opacity-60"
-          priority
-        />
-        <div className="relative z-10 text-center px-4 max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
-            Encuentra tu próximo hogar con <br />{" "}
-            <span className="text-indigo-400">tecnología inmersiva.</span>
-          </h1>
-          <p className="text-lg text-slate-200 mb-8 max-w-2xl mx-auto">
-            Explora propiedades con Realidad Aumentada y Tours 360°. La nueva
-            forma de comprar casa en Perú.
-          </p>
+      <main>
+        <Hero />
 
-          {/* BARRA DE BÚSQUEDA PRO */}
-          <div className="bg-white p-2 rounded-2xl md:rounded-full shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto gap-2">
-            <input
-              type="text"
-              placeholder="¿En qué distrito buscas?"
-              className="w-full px-6 py-3 text-slate-700 outline-none rounded-full"
-            />
-            <button className="w-full md:w-auto bg-indigo-600 text-white px-8 py-3 rounded-full font-bold hover:bg-indigo-700 transition-all">
-              Buscar
-            </button>
-          </div>
-        </div>
-      </section>
+        {/* Opcional: Iconos de categorías */}
+        <Categories />
 
-      {/* FEED DE PROPIEDADES (Placeholder de la Demo) */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <div className="flex justify-between items-end mb-10">
-          <div>
-            <h2 className="text-3xl font-bold text-slate-900">
-              Propiedades Destacadas
-            </h2>
-            <p className="text-slate-500">
-              Seleccionadas especialmente por su ubicación y diseño.
-            </p>
-          </div>
-          <button className="text-indigo-600 font-semibold hover:underline">
-            Ver todas
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* CARD EJEMPLO (Repetir este componente con los datos de Supabase luego) */}
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="group cursor-pointer">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 shadow-sm group-hover:shadow-xl transition-all">
-                <Image
-                  src={`https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070`}
-                  alt="Propiedad"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-slate-900">
-                  ESTRENO
-                </div>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-1">
-                Moderno Depa en San Isidro
-              </h3>
-              <p className="text-slate-500 text-sm mb-3">
-                Av. Salaverry 1234, San Isidro
+        {/* FEED DE PROPIEDADES */}
+        <section className="max-w-7xl mx-auto px-6 py-20">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+            <div>
+              <h2 className="text-4xl font-black text-slate-900 tracking-tight">
+                Propiedades Destacadas
+              </h2>
+              <p className="text-slate-500 text-lg mt-2">
+                Explora lo último en el mercado inmobiliario.
               </p>
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-black text-indigo-600">
-                  $245,000
-                </span>
-                <div className="flex gap-4 text-slate-400 text-sm">
-                  <span>3 hab</span>
-                  <span>2 baños</span>
-                </div>
-              </div>
             </div>
-          ))}
-        </div>
-      </section>
-    </main>
+            <Link
+              href="/buscar"
+              className="group flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-700 transition-all"
+            >
+              Ver todas las propiedades
+              <span className="group-hover:translate-x-1 transition-transform">
+                →
+              </span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {inmuebles.map((item) => (
+              <PropertyCard key={item.id} inmueble={item} />
+            ))}
+
+            {inmuebles.length === 0 && (
+              <div className="col-span-full text-center py-20 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+                <p className="text-slate-400 font-medium">
+                  No hay propiedades disponibles en este momento.
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* SECCIÓN DE CONFIANZA (Look Pro) */}
+        <section className="bg-slate-50 py-20 border-y border-slate-100">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+            <div>
+              <div className="text-4xl mb-4">🛡️</div>
+              <h3 className="font-bold text-xl mb-2 text-slate-900">
+                Compra Segura
+              </h3>
+              <p className="text-slate-500 text-sm">
+                Verificamos cada propiedad y vendedor para tu tranquilidad.
+              </p>
+            </div>
+            <div>
+              <div className="text-4xl mb-4">⚡</div>
+              <h3 className="font-bold text-xl mb-2 text-slate-900">
+                Proceso Ágil
+              </h3>
+              <p className="text-slate-500 text-sm">
+                Agenda visitas y contacta agentes en segundos.
+              </p>
+            </div>
+            <div>
+              <div className="text-4xl mb-4">📍</div>
+              <h3 className="font-bold text-xl mb-2 text-slate-900">
+                Ubicación Real
+              </h3>
+              <p className="text-slate-500 text-sm">
+                Visualiza tu futuro hogar en nuestro mapa interactivo.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
