@@ -1,10 +1,9 @@
+// next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "export",
-  basePath: "/real-state", // Agrega el nombre de tu repositorio aquí
+  /* Quita 'output: export' y 'basePath' */
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
