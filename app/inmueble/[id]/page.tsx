@@ -8,6 +8,7 @@ import { PropertyCard } from "@/app/inmueble/PropertyCard";
 import { PropertyGallery } from "@/app/inmueble/PropertyGallery";
 import MapWrapper from "@/app/components/MapWrapper"; // Importamos el Wrapper
 
+export const dynamic = "force-dynamic";
 export default async function InmueblePage({
   params,
 }: {
@@ -132,8 +133,10 @@ export default async function InmueblePage({
           <aside className="relative">
             <BookingCard
               precio={inmueble.precio}
-              whatsappLink={whatsappLink}
+              inmuebleId={inmueble.id}
+              agenteId={inmueble.propietario_id} // IMPORTANTE: Usamos el ID del dueño
               agente={inmueble.profiles}
+              tituloInmueble={inmueble.titulo}
             />
           </aside>
         </div>
